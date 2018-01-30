@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="loading_text_size">24sp</dimen>
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="content_padding">4dp</dimen>
+    <dimen name="paddind2dp">2dp</dimen>
+    <dimen name="content_title_text_size">22sp</dimen>
+</resources>
