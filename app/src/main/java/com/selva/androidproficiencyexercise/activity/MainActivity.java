@@ -1,6 +1,8 @@
 package com.selva.androidproficiencyexercise.activity;
 
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -55,7 +57,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private CountryData countryDataModel;
 
+    private static final String KEY_FOR_LAYOUT_MANAGER = "KEY_FOR_LAYOUT_MANAGER";
     private CountryDataAdaptor countryDataAdaptor;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 .networkModule(new NetworkModule())
                 .countryDetailsModule(new CountryDetailsModule())
                 .build();
+        mLayoutManager = new LinearLayoutManager(this);
         applicationComponent.inject(this);
         ButterKnife.bind(this);
         countryDataPresenter.initCountryData();
@@ -108,24 +113,36 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
      */
     @Override
     public void onFailure(String errorMessage) {
-        swipeRefreshLayout.setVisibility(View.GONE);
+        recyclerViewForItems.setVisibility(View.GONE);
         errorRelativeLayout.setVisibility(View.VISIBLE);
         errorAppCompatTextView.setText(String.valueOf(errorMessage));
     }
 
     @Override
     public void onCountryDataLoaded(CountryData countryDataModel) {
-        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        recyclerViewForItems.setVisibility(View.VISIBLE);
         errorRelativeLayout.setVisibility(View.GONE);
         this.countryDataModel = countryDataModel;
         if (countryDataAdaptor == null) {
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
             recyclerViewForItems.setLayoutManager(mLayoutManager);
             countryDataAdaptor = new CountryDataAdaptor(this, this.countryDataModel);
             recyclerViewForItems.setAdapter(countryDataAdaptor);
         } else {
             countryDataAdaptor.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Parcelable state = savedInstanceState.getParcelable(KEY_FOR_LAYOUT_MANAGER);
+        mLayoutManager.onRestoreInstanceState(state);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_FOR_LAYOUT_MANAGER, mLayoutManager.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
     }
 
     /**

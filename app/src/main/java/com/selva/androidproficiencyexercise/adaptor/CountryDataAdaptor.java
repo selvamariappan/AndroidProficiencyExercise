@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.selva.androidproficiencyexercise.R;
 import com.selva.androidproficiencyexercise.model.CountryData;
@@ -61,6 +62,8 @@ public class CountryDataAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
                 countryDataViewHolder.contentImageview.setVisibility(View.GONE);
                 Glide.with(context)
                         .load(countryData.getRows().get(position).getImageHref())
+                        .apply(new RequestOptions().frame(1000))
+                        .thumbnail(.5f)
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

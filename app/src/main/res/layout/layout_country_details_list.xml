@@ -39,12 +39,12 @@
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/content_img"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="125dp"
+                android:layout_height="120dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center"
-                android:scaleType="fitCenter"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_launcher_background" />
         </RelativeLayout>
     </RelativeLayout>
