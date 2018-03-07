@@ -62,8 +62,7 @@ public class CountryDataAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
                 countryDataViewHolder.contentImageview.setVisibility(View.GONE);
                 Glide.with(context)
                         .load(countryData.getRows().get(position).getImageHref())
-                        .apply(new RequestOptions().frame(1000))
-                        .thumbnail(.5f)
+                        .apply(new RequestOptions().override(400, 400))
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
