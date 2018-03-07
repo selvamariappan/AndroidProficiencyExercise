@@ -6,6 +6,7 @@ import com.selva.androidproficiencyexercise.bimanager.CountryDataBussinessManage
 import com.selva.androidproficiencyexercise.model.CountryData;
 import com.selva.androidproficiencyexercise.mvp.CountryDataMVP;
 import com.selva.androidproficiencyexercise.qualifier.ApplicationContext;
+import com.selva.androidproficiencyexercise.repo.DataCacheManager;
 import com.selva.androidproficiencyexercise.services.CountryDetailsService;
 import com.selva.androidproficiencyexercise.utils.AppUtils;
 
@@ -31,17 +32,24 @@ public class CountryDataPresenter implements CountryDataMVP.Presenter {
 
     /**
      * Method to init the api call
+     *
      * @param isForceNetworkcall flag for force api call or not
      */
     public void getCountryData(boolean isForceNetworkcall) {
         if (!isForceNetworkcall) {
             countryDataView.showLoader();
+            if (DataCacheManager.getDataCacheManager().isDataAvaliable()) {
+                countryDataView.hideLoader();
+                handleSuccessData(DataCacheManager.getDataCacheManager().getCountryData());
+                return;
+            }
         }
         Subscription subscription = service.getCountryDataDetails(new CountryDetailsService.GetCountryDataCallback() {
 
             @Override
             public void onSuccess(CountryData countryDataModel) {
                 countryDataView.hideLoader();
+                DataCacheManager.getDataCacheManager().setCountryData(countryDataModel);
                 handleSuccessData(countryDataModel);
             }
 
@@ -58,14 +66,16 @@ public class CountryDataPresenter implements CountryDataMVP.Presenter {
 
     /**
      * Method to show error message to ui
+     *
      * @param networkError - error message
      */
     private void handleFailureData(String networkError) {
-        countryDataView.onFailure(CountryDataBussinessManager.getErrorMessage(context,networkError));
+        countryDataView.onFailure(CountryDataBussinessManager.getErrorMessage(context, networkError));
     }
 
     /**
      * Method to handle Success message
+     *
      * @param countryDataModel - api response
      */
     private void handleSuccessData(CountryData countryDataModel) {
